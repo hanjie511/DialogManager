@@ -50,4 +50,49 @@ public class DiaLogManager {
 		date_dialog.show();
 	}
 }
+/*
+* 可以记忆的多选对话框
+*/
+	public void showMutiChioceAlert(Context context,String alertTitle,final String [] dataSource,final String msg,boolean isFiest) {
+		if(isFiest) {
+			AppApplication.multichioce_array=new boolean[dataSource.length];
+			for(int i=0;i<dataSource.length;i++) {
+				AppApplication.multichioce_array[i]=false;
+			}
+		}
+		final AlertDialog.Builder builder=new AlertDialog.Builder(context);
+		 
+		builder.setTitle(alertTitle);
+		builder.setMultiChoiceItems(dataSource, AppApplication.multichioce_array, new OnMultiChoiceClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface arg0, int which, boolean isChecked) {
+				// TODO Auto-generated method stub
+				AppApplication.multichioce_array[which]=isChecked;
+			}
+		});
+		builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface arg0, int arg1) {
+				// TODO Auto-generated method stub
+				for(int i=0;i<AppApplication.multichioce_array.length;i++) {
+					if(AppApplication.multichioce_array[i]) {
+						result=result+dataSource[i]+",";
+					}
+				}
+				EventBus.getDefault().post(new EventBusTools(msg, result, ""));
+			}
+		});
+		builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface arg0, int arg1) {
+				// TODO Auto-generated method stub
+				builder.create().dismiss();
+			}
+		});
+		builder.create().show();
+	}
+	
 ```
